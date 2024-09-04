@@ -1,0 +1,197 @@
+openapi: 3.0.0
+info:
+  title: 範例 API
+  description: 這是一個 OpenAPI 3.0 範本，包含常見的 API 功能
+  version: 1.0.0
+  contact:
+    name: API 支持團隊
+    email: support@example.com
+    url: https://www.example.com/support
+servers:
+  - url: https://api.example.com/v1
+    description: 生產環境
+  - url: https://staging-api.example.com/v1
+    description: 測試環境
+paths:
+  /users:
+    get:
+      summary: 獲取用戶列表
+      description: 返回分頁的用戶列表
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+          description: 頁碼
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+          description: 每頁項目數
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:    
+              schema:
+                $ref: '#/components/schemas/UserList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+    post:
+      summary: 創建新用戶
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewUser'
+      responses:
+        '201':
+          description: 創建成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+  /users/{userId}:
+    get:
+      summary: 獲取特定用戶
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+          description: 用戶 ID
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: 更新用戶信息
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+          description: 用戶 ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+      responses:
+        '200':
+          description: 更新成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: 刪除用戶
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+          description: 用戶 ID
+      responses:
+        '204':
+          description: 刪除成功
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    NewUser:
+      type: object
+      required:
+        - username
+        - email
+        - password
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+          format: password
+    UpdateUser:
+      type: object
+      properties:
+        username:
+          type: string
+        email:
+          type: string
+    UserList:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+            page:
+              type: integer
+            limit:
+              type: integer
+  responses:
+    BadRequest:
+      description: 無效請求
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: 資源未找到
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
