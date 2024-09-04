@@ -1,0 +1,1 @@
+export { stageraiPlugin } from './plugin';

@@ -1,0 +1,195 @@
+app:
+  title: Scaffolded Backstage App
+  baseUrl: https://localhost
+  https:
+    certificate:
+      cert:
+        $file: ./cert/localhost.pem
+      key:
+        $file: ./cert/localhost-key.pem
+
+organization:
+  name: My Company
+
+backend:
+  baseUrl: https://localhost:7007
+  https:
+    certificate:
+      cert:
+        $file: ./cert/localhost.pem
+      key:
+        $file: ./cert/localhost-key.pem
+  listen:
+    port: 7007
+    # Uncomment the following host directive to bind to specific interfaces
+    # host: 127.0.0.1
+  csp:
+    connect-src: ["'self'", 'http:', 'https:']
+    # Content-Security-Policy directives follow the Helmet format: https://helmetjs.github.io/#reference
+    # Default Helmet Content-Security-Policy values can be removed by setting the key to false
+  cors:
+    origin: https://localhost
+    methods: [GET, HEAD, PATCH, POST, PUT, DELETE]
+    credentials: true
+  # This is for local development only, it is not recommended to use this in production
+  # The production database configuration is stored in app-config.production.yaml
+  database:
+    client: better-sqlite3
+    connection: ':memory:'
+  # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
+  # reading:
+  #   allow:
+  #     - host: 'azdevops.liontravel.com'
+
+integrations:
+  github:
+    - host: github.com
+      token: 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
+  azure:
+    - host: azdevops.liontravel.com
+      credentials:
+        - personalAccessToken: iqmz66ag2a2or2yan4vs3zxmypjxpvni5brxa32mlrjy2swqwhea
+
+azureDevOps:
+  host: azdevops.liontravel.com
+  organization: LionTech
+
+uptimekuma:
+  baseUrl: https://uptimekuma.local.com
+
+n8n:
+  baseUrl: https://un8n.liontravel.com
+
+feedback:
+  baseEntityRef: 'system:default/backstage'
+  summaryLimit: 240
+  integrations:
+    jira:
+      - host: 'https://fake-jira-url'
+        token: 'fake-jira-token'
+
+proxy:
+  ### Example for how to add a proxy endpoint for the frontend.
+  ### A typical reason to do this is to handle HTTPS and CORS for internal services.
+  # endpoints:
+  #   '/test':
+  #     target: 'https://example.com'
+  #     changeOrigin: true
+
+techdocs:
+  builder: 'local' # or - 'external'
+  generator:
+    runIn: 'local' # or - 'docker'
+  publisher:
+    type: 'local' #  or - 'googleGcs' or 'awsS3'.
+
+auth:
+  environment: development
+  session:
+    secret: secret
+  providers:
+    guest: {}
+    github:
+      development:
+        clientId: Ov23lix1OL9DBr1MlUMb
+        clientSecret: 7e3d0ba7461f33fa0f20737ba178569f6d2f58ab
+        signIn:
+          resolvers:
+            # Matches the GitHub username with the Backstage user entity name.
+            # See https://backstage.io/docs/auth/github/provider#resolvers for more resolvers.
+            - resolver: usernameMatchingUserEntityName
+    sso-auth-provider:
+      development:
+        metadataUrl: https://localhost:5001/.well-known/openid-configuration
+        clientId: backstage
+        clientSecret: backstage
+        prompt: login
+        signIn:
+          resolvers:
+            # one of the following resolvers
+            - resolver: emailMatchingUserEntityAnnotation
+            - resolver: emailMatchingUserEntityProfileEmail
+            - resolver: emailLocalPartMatchingUserEntityName
+
+scaffolder:
+  # see https://backstage.io/docs/features/software-templates/configuration for software template options
+
+catalog:
+  providers:
+    ldapOrg:
+      default:
+        target: ldap://GDC01.lionmail.com
+        bind:
+          dn: CN=backstageadmin,OU=liontravel,DC=lionmail,DC=com
+          secret: X@220611
+        schedule:
+          frequency: { minutes: 10 }
+          timeout: { minutes: 10 }
+        users:
+          dn: OU=雄獅資訊事業處,OU=liontravel,DC=lionmail,DC=com
+          options:
+            scope: sub
+            filter: (sAMAccountName=*)
+            attributes: ['*', '+']
+          set:
+            spec.memberOf: ['liontech']
+          map:
+            description: description
+            name: sAMAccountName
+            displayName: cn
+            email: mail
+        groups:
+          dn: OU=雄獅資訊事業處,OU=liontravel,DC=lionmail,DC=com
+          options:
+            scope: sub
+            filter: (cn='雄獅')
+            attributes: ['*', '+']
+          map:
+            rdn: cn
+            name: name
+            displayName: cn
+  processingInterval: { seconds: 10 } #每一分鐘更新一次catalog檔案
+  orphanStrategy: delete #若有已刪除的孤立實體則刪除
+  import:
+    entityFilename: catalog-info.yaml
+    pullRequestBranchName: backstage-integration
+  rules:
+    - allow: [Component, System, API, Resource, Location]
+  locations:
+
+    - type: file    
+      target: ../../techdocs/test_doc/test_doc.yaml
+      
+    - type: file
+      target: ../../examples/tempuser.yaml
+      rules:
+        - allow: [User]
+
+    - type: file    
+      target: ../../examples/azure_repo.yaml
+
+    # Local example data, file locations are relative to the backend process, typically `packages/backend`
+    - type: file
+      target: ../../examples/entities.yaml
+
+    # Local example template
+    - type: file
+      target: ../../examples/template/template.yaml
+      rules:
+        - allow: [Template]
+
+    # Local example organizational data
+    - type: file
+      target: ../../examples/org.yaml
+      rules:
+        - allow: [User, Group]
+
+    ## Uncomment these lines to add more example data
+    # - type: url
+    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/all.yaml
+
+    ## Uncomment these lines to add an example org
+    # - type: url
+    #   target: https://github.com/backstage/backstage/blob/master/packages/catalog-model/examples/acme-corp.yaml
+    #   rules:
+    #     - allow: [User, Group]

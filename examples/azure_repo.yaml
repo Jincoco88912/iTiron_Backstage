@@ -1,0 +1,14 @@
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: azdevops_test
+  annotations:
+    dev.azure.com/project-repo: TripGDS.SSO/Web.LionTravel.apigateway.krakend
+    uptimekuma/status-url: https://uptimekuma.local.com/status/main
+spec:
+  type: website
+  lifecycle: experimental
+  owner: guests
+  system: demo
+---

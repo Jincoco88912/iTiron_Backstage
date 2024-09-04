@@ -1,0 +1,7 @@
+site_name: The test doc site
+site_description: hello there
+nav:
+  - Who Am I: index.md
+  - LET'S DO IT: start.md
+plugins:
+  - techdocs-core
