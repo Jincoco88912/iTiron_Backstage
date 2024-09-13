@@ -35,7 +35,7 @@ import { createApp } from '@backstage/app-defaults';
 import { AppRouter, FlatRoutes } from '@backstage/core-app-api';
 import { CatalogGraphPage } from '@backstage/plugin-catalog-graph';
 import { RequirePermission } from '@backstage/plugin-permission-react';
-import { catalogEntityCreatePermission } from '@backstage/plugin-catalog-common/alpha';
+import { catalogEntityCreatePermission, catalogEntityReadPermission } from '@backstage/plugin-catalog-common/alpha';
 import { githubAuthApiRef } from '@backstage/core-plugin-api';
 import { UptimeKumaPage } from '@internal/backstage-plugin-uptime-kuma';
 import { WebTerminalPage } from '@internal/backstage-plugin-web-terminal';
@@ -50,6 +50,7 @@ import { StageraiChat } from '@internal/backstage-plugin-stagerai/src/components
 
 import { HomepageCompositionRoot } from '@backstage/plugin-home';
 import { HomePage } from './components/home/HomePage';
+import PermissionDenied from './components/custom/PermissionDenied';
 
 const app = createApp({
   apis,
@@ -137,7 +138,11 @@ const routes = (
     <Route path="/uptime-kuma" element={<UptimeKumaPage />} />
     <Route path="/web-terminal" element={<WebTerminalPage />} />
     <Route path="/feedback" element={<GlobalFeedbackPage />} />
-    <Route path="/n8n" element={<N8NPage />} />
+    <Route path="/n8n" element={
+      <RequirePermission permission={catalogEntityCreatePermission} errorPage={<PermissionDenied />}>
+        <N8NPage />
+      </RequirePermission>
+      } />
     <Route path="/stagerai" element={<StageraiChat />} />
   </FlatRoutes>
 );

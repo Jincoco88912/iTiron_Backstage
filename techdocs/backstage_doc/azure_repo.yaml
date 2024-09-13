@@ -6,9 +6,12 @@ metadata:
   annotations:
     dev.azure.com/project-repo: TripGDS.SSO/Web.LionTravel.apigateway.krakend
     uptimekuma/status-url: https://uptimekuma.local.com/status/main
+    backstage.io/techdocs-ref: dir:.
 spec:
-  type: website
+  type: service
   lifecycle: experimental
-  owner: guests
+  owner: team-x
   system: demo
+  providesApis:
+    - artist-api
 ---

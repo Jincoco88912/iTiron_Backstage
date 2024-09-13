@@ -3,7 +3,7 @@
 apiVersion: backstage.io/v1alpha1
 kind: User
 metadata:
-  name: Jincoco88912
+  name: jincoco88912
 spec:
-  memberOf: []
+  memberOf: [team-x, backstage-developer]
 ---

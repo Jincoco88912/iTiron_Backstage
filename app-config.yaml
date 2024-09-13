@@ -11,6 +11,9 @@ app:
 organization:
   name: My Company
 
+permission:
+  enabled: true
+  
 backend:
   baseUrl: https://localhost:7007
   https:
@@ -37,9 +40,9 @@ backend:
     client: better-sqlite3
     connection: ':memory:'
   # workingDirectory: /tmp # Use this to configure a working directory for the scaffolder, defaults to the OS temp-dir
-  # reading:
-  #   allow:
-  #     - host: 'azdevops.liontravel.com'
+  reading:
+    allow:
+      - host: ubackstage.liontravel.com
 
 integrations:
   github:
@@ -156,6 +159,11 @@ catalog:
   rules:
     - allow: [Component, System, API, Resource, Location]
   locations:
+    - type: file    
+      target: ../../techdocs/backstage_doc/azure_repo.yaml
+
+    - type: file    
+      target: ../../examples/API/api_enti.yaml
 
     - type: file    
       target: ../../techdocs/test_doc/test_doc.yaml

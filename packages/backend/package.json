@@ -45,6 +45,7 @@
     "@backstage/plugin-techdocs-backend": "^1.10.9",
     "@internal/backstage-plugin-auth-backend-module-oidc": "^0.1.0",
     "@internal/backstage-plugin-ollama-api-backend": "^0.1.0",
+    "@internal/backstage-plugin-permission-backend-module-custom": "^0.1.0",
     "@janus-idp/backstage-plugin-feedback-backend": "^1.7.2",
     "app": "link:../app",
     "better-sqlite3": "^9.0.0",

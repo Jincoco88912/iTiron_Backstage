@@ -19,8 +19,8 @@ backend.add(import('@backstage/plugin-techdocs-backend/alpha'));
 backend.add(import('@backstage/plugin-auth-backend'));
 backend.add(import('@backstage/plugin-auth-backend-module-guest-provider'));
 backend.add(import('@backstage/plugin-auth-backend-module-github-provider'));
-// backend.add(import('@backstage/plugin-auth-backend-module-oidc-provider'));
-// backend.add(import('@internal/backstage-plugin-auth-backend-module-oidc'));
+backend.add(import('@backstage/plugin-auth-backend-module-oidc-provider'));
+backend.add(import('@internal/backstage-plugin-auth-backend-module-oidc'));
 
 // catalog plugin
 backend.add(import('@backstage/plugin-catalog-backend/alpha'));
@@ -34,7 +34,8 @@ backend.add(import('@backstage/plugin-catalog-backend-module-logs'));
 // permission plugin
 backend.add(import('@backstage/plugin-permission-backend/alpha'));
 backend.add(
-  import('@backstage/plugin-permission-backend-module-allow-all-policy'),
+  // import('@backstage/plugin-permission-backend-module-allow-all-policy'),
+  import('@internal/backstage-plugin-permission-backend-module-custom'),
 );
 
 // search plugin
@@ -44,7 +45,6 @@ backend.add(import('@backstage/plugin-search-backend/alpha'));
 // See https://backstage.io/docs/features/search/search-engines
 backend.add(import('@backstage/plugin-search-backend-module-pg/alpha'));
 
-// search collators
 backend.add(import('@backstage/plugin-search-backend-module-catalog/alpha'));
 backend.add(import('@backstage/plugin-search-backend-module-techdocs/alpha'));
 

@@ -15,7 +15,7 @@ metadata:
 spec:
   type: website
   lifecycle: experimental
-  owner: guests
+  owner: team-x
   system: demo
   providesApis: [example-grpc-api]
 ---

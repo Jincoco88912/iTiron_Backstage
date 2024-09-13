@@ -1,0 +1,6 @@
+site_name: 測試範本API文件
+site_description: hello there
+nav:
+  - How2Use: index.md
+plugins:
+  - techdocs-core
